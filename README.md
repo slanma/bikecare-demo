@@ -32,6 +32,20 @@ Repozitář obsahuje workflow `.github/workflows/pages.yml`. V GitHubu otevřete
 
 Před prezentací nahraďte demonstrační e-mail `pilot@bikecare.cz` v `pilot.html` vlastním kontaktem.
 
+## Automatické nahrávání na GitHub
+
+Na macOS lze jedním příkazem zapnout lokální LaunchAgent. Každých 30 sekund zkontroluje nový commit a odešle jej na větev `main`:
+
+```bash
+./scripts/install-auto-push.sh
+```
+
+Log je uložen pouze lokálně v `.git/auto-push/auto-push.log`. Vypnutí:
+
+```bash
+./scripts/uninstall-auto-push.sh
+```
+
 ## Omezení dema
 
 Jde o produktové demo. Pro ostrý provoz je potřeba doplnit serverovou databázi, přihlášení, oprávnění jednotlivých provozoven, odesílání e-mailů/SMS, zálohy a právní texty konkrétního provozovatele.
