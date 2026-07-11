@@ -1,0 +1,151 @@
+<!doctype html>
+<html lang="cs">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#12231f" />
+  <title>BikeCare — příjem cykloservisu</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <div class="app-shell">
+    <header class="topbar">
+      <a class="brand" href="#" data-view="home" aria-label="BikeCare domů">
+        <span class="brand-mark">B</span>
+        <span><strong>BikeCare</strong><small>servis bez chaosu</small></span>
+      </a>
+      <nav>
+        <button class="nav-link" data-view="intake">Objednat servis</button>
+        <button class="nav-link" data-view="tracking">Sledovat opravu</button>
+        <button class="nav-link admin-link" data-view="admin">Pro servis <span>→</span></button>
+      </nav>
+    </header>
+
+    <main>
+      <section id="home" class="view active hero-view">
+        <div class="hero-copy">
+          <p class="eyebrow">CHYTRÝ PŘÍJEM DO SERVISU</p>
+          <h1>Méně telefonování.<br><em>Více času na kola.</em></h1>
+          <p class="lead">Zákazník popíše problém, servis zakázku převezme a každý ví, co se právě děje.</p>
+          <div class="hero-actions">
+            <button class="btn primary" data-view="intake">Objednat kolo do servisu</button>
+            <button class="btn secondary" data-view="tracking">Sledovat svou opravu</button>
+          </div>
+          <div class="trust-row">
+            <span>✓ Bez registrace</span><span>✓ Potvrzení ihned</span><span>✓ Přehledný stav opravy</span>
+          </div>
+        </div>
+        <aside class="hero-card">
+          <div class="card-top"><span>Aktivní zakázka</span><span class="live-dot">● V servisu</span></div>
+          <div class="bike-visual" aria-hidden="true">🚲</div>
+          <div class="order-mini">
+            <div><small>Trek Powerfly 5</small><strong>Výměna řetězu a kontrola brzd</strong></div>
+            <span class="code">BC-2407</span>
+          </div>
+          <div class="progress"><span></span><span></span><span></span><span></span></div>
+          <div class="progress-labels"><span>Přijato</span><span>Diagnostika</span><span>Oprava</span><span>Hotovo</span></div>
+        </aside>
+      </section>
+
+      <section id="intake" class="view form-view">
+        <div class="section-heading">
+          <button class="back" data-view="home">← Zpět</button>
+          <p class="eyebrow">NOVÁ ZAKÁZKA</p>
+          <h2>Řekněte nám, co vaše kolo potřebuje.</h2>
+          <p>Vyplnění zabere přibližně dvě minuty. Servis se vám následně ozve.</p>
+        </div>
+        <form id="intake-form" class="intake-grid">
+          <div class="form-card">
+            <h3>1. Kontakt</h3>
+            <div class="field-row">
+              <label>Jméno a příjmení<input name="name" required placeholder="Jan Novák"></label>
+              <label>Telefon<input name="phone" type="tel" required placeholder="+420 777 123 456"></label>
+            </div>
+            <label>E-mail<input name="email" type="email" required placeholder="jan@email.cz"></label>
+          </div>
+          <div class="form-card">
+            <h3>2. Kolo</h3>
+            <div class="bike-types" role="radiogroup">
+              <label><input type="radio" name="bikeType" value="Horské" checked><span>⛰️<b>Horské</b></span></label>
+              <label><input type="radio" name="bikeType" value="Silniční"><span>🏁<b>Silniční</b></span></label>
+              <label><input type="radio" name="bikeType" value="Elektrokolo"><span>⚡<b>Elektrokolo</b></span></label>
+              <label><input type="radio" name="bikeType" value="Městské"><span>🏙️<b>Městské</b></span></label>
+            </div>
+            <div class="field-row">
+              <label>Značka<input name="brand" required placeholder="např. Trek"></label>
+              <label>Model<input name="model" placeholder="např. Powerfly 5"></label>
+            </div>
+          </div>
+          <div class="form-card full">
+            <h3>3. Co se děje?</h3>
+            <label>Popis problému<textarea name="issue" required rows="4" placeholder="Popište závadu, zvuky nebo servis, který potřebujete..."></textarea></label>
+            <div class="field-row">
+              <label>Preferovaný termín<input name="preferredDate" type="date" required></label>
+              <label>Orientační rozpočet<select name="budget"><option>Chci nejdříve kalkulaci</option><option>Do 1 500 Kč</option><option>Do 3 000 Kč</option><option>Do 5 000 Kč</option><option>Bez omezení</option></select></label>
+            </div>
+            <label class="consent"><input type="checkbox" required> Souhlasím se zpracováním údajů pro vyřízení servisní zakázky.</label>
+            <button class="btn primary submit" type="submit">Odeslat do servisu <span>→</span></button>
+          </div>
+        </form>
+      </section>
+
+      <section id="success" class="view centered-view">
+        <div class="success-icon">✓</div>
+        <p class="eyebrow">HOTOVO</p>
+        <h2>Zakázku máme bezpečně uloženou.</h2>
+        <p>Váš servisní kód je</p>
+        <button id="created-code" class="big-code" title="Kliknutím zkopírujete"></button>
+        <p class="muted">Kód si uložte. Umožní vám kdykoliv zkontrolovat průběh opravy.</p>
+        <div class="hero-actions center">
+          <button id="track-created" class="btn primary">Sledovat zakázku</button>
+          <button class="btn secondary" data-view="home">Zpět na úvod</button>
+        </div>
+      </section>
+
+      <section id="tracking" class="view tracking-view">
+        <div class="section-heading narrow">
+          <button class="back" data-view="home">← Zpět</button>
+          <p class="eyebrow">STAV OPRAVY</p>
+          <h2>Jak je na tom vaše kolo?</h2>
+          <p>Zadejte servisní kód, který jste obdrželi při objednání.</p>
+        </div>
+        <form id="tracking-form" class="tracking-search">
+          <input id="tracking-code" required placeholder="např. BC-2407" autocomplete="off">
+          <button class="btn primary" type="submit">Zobrazit stav</button>
+        </form>
+        <div id="tracking-result" class="tracking-result hidden"></div>
+      </section>
+
+      <section id="admin" class="view admin-view">
+        <div class="admin-header">
+          <div><p class="eyebrow">PŘEHLED SERVISU</p><h2>Dobré ráno, BikeCare.</h2><p id="today-label"></p></div>
+          <button class="btn primary" data-view="intake">+ Nová zakázka</button>
+        </div>
+        <div id="stats" class="stats"></div>
+        <div class="admin-panel">
+          <div class="panel-toolbar">
+            <h3>Zakázky</h3>
+            <div class="toolbar-actions"><input id="admin-search" type="search" placeholder="Hledat jméno, kolo nebo kód…"><select id="status-filter"><option value="all">Všechny stavy</option></select></div>
+          </div>
+          <div class="orders-table-wrap"><table><thead><tr><th>Zakázka</th><th>Zákazník</th><th>Kolo</th><th>Požadavek</th><th>Stav</th><th>Cena</th><th></th></tr></thead><tbody id="orders-body"></tbody></table></div>
+          <div id="empty-orders" class="empty hidden">Žádné zakázky neodpovídají filtru.</div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <dialog id="order-dialog">
+    <form method="dialog" class="dialog-inner">
+      <button class="dialog-close" value="cancel" aria-label="Zavřít">×</button>
+      <p class="eyebrow">DETAIL ZAKÁZKY</p>
+      <h2 id="dialog-code"></h2>
+      <div id="dialog-content"></div>
+    </form>
+  </dialog>
+  <div id="toast" class="toast" role="status"></div>
+  <script src="app.js"></script>
+</body>
+</html>
