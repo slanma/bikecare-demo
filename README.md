@@ -1,5 +1,7 @@
 # BikeCare – funkční demo příjmu cykloservisu
 
+Online repozitář: <https://github.com/slanma/bikecare-demo>
+
 Samostatné demo bez instalace závislostí. Data se ukládají lokálně v prohlížeči.
 
 ## Spuštění
