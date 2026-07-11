@@ -12,6 +12,7 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
+  <link rel="stylesheet" href="enhancements.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -131,10 +132,11 @@
         <div id="stats" class="stats"></div>
         <div class="admin-panel">
           <div class="panel-toolbar">
-            <h3>Zakázky</h3>
-            <div class="toolbar-actions"><input id="admin-search" type="search" placeholder="Hledat jméno, kolo nebo kód…"><select id="status-filter"><option value="all">Všechny stavy</option></select></div>
+            <div><h3>Zakázky</h3><small class="panel-subtitle">Aktuální provoz servisu v jednom pohledu</small></div>
+            <div class="toolbar-actions"><div class="view-switch"><button id="table-view" class="active" title="Tabulka">☷</button><button id="board-view" title="Kanban">▦</button></div><button id="export-csv" class="tool-btn">↓ Export CSV</button><input id="admin-search" type="search" placeholder="Hledat jméno, kolo nebo kód…"><select id="status-filter"><option value="all">Všechny stavy</option></select></div>
           </div>
           <div class="orders-table-wrap"><table><thead><tr><th>Zakázka</th><th>Zákazník</th><th>Kolo</th><th>Požadavek</th><th>Stav</th><th>Cena</th><th></th></tr></thead><tbody id="orders-body"></tbody></table></div>
+          <div id="orders-board" class="orders-board hidden"></div>
           <div id="empty-orders" class="empty hidden">Žádné zakázky neodpovídají filtru.</div>
         </div>
       </section>

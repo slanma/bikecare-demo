@@ -56,7 +56,8 @@ function renderTracking(code){
   const active=stepIndex(o.status);
   target.innerHTML=`<div class="track-top"><div><small>${esc(o.brand)} ${esc(o.model)}</small><h3>${esc(o.issue)}</h3><span class="code">${esc(o.code)}</span></div><span class="status-pill">${esc(o.status)}</span></div>
     <div class="timeline">${STEPS.map((s,i)=>`<div class="timeline-step ${i<active?'done':''} ${i===active?'current':''}">${s}</div>`).join('')}</div>
-    <div class="track-grid"><div class="info-box"><small>Preferovaný termín</small><strong>${date(o.preferredDate)}</strong></div><div class="info-box"><small>Aktuální kalkulace</small><strong>${money(o.price)}</strong></div></div>`;
+    <div class="track-grid"><div class="info-box"><small>Preferovaný termín</small><strong>${date(o.preferredDate)}</strong></div><div class="info-box"><small>Aktuální kalkulace</small><strong>${money(o.price)}</strong></div></div><div class="customer-actions"><button class="btn secondary" type="button" onclick="window.print()">Vytisknout servisní kartu</button><button class="btn primary" type="button" data-view="intake">Objednat další servis</button></div>`;
+  $$('[data-view]',target).forEach(el=>el.addEventListener('click',()=>showView(el.dataset.view)));
 }
 
 function renderAdmin(){
@@ -67,6 +68,8 @@ function renderAdmin(){
   const revenue=orders.reduce((n,o)=>n+(Number(o.price)||0),0);
   $('#stats').innerHTML=[['Aktivní zakázky',active],['Dnes přijato',orders.filter(o=>o.created.slice(0,10)===new Date().toISOString().slice(0,10)).length],['K vyzvednutí',ready],['Hodnota zakázek',money(revenue)]].map(x=>`<div class="stat-card"><small>${x[0]}</small><strong>${x[1]}</strong></div>`).join('');
   $('#orders-body').innerHTML=filtered.map(o=>`<tr><td class="order-code">${esc(o.code)}</td><td>${esc(o.name)}</td><td>${esc(o.brand)} ${esc(o.model)}</td><td class="issue" title="${esc(o.issue)}">${esc(o.issue)}</td><td><select class="status-select" data-code="${o.code}">${STATUSES.map(s=>`<option ${s===o.status?'selected':''}>${s}</option>`).join('')}</select></td><td>${money(o.price)}</td><td><button class="table-btn" data-detail="${o.code}">Detail</button></td></tr>`).join('');
+  const boardGroups=[['Příjem',['Přijato']],['Diagnostika',['Diagnostika','Čeká na schválení']],['Probíhá',['Oprava']],['K vyzvednutí',['Připraveno k vyzvednutí']]];
+  $('#orders-board').innerHTML=boardGroups.map(([title,statuses])=>`<section class="board-column"><header><h4>${title}</h4><span>${filtered.filter(o=>statuses.includes(o.status)).length}</span></header><div>${filtered.filter(o=>statuses.includes(o.status)).map(o=>`<button class="board-card" data-detail="${o.code}"><small>${esc(o.code)} · ${esc(o.bikeType)}</small><strong>${esc(o.brand)} ${esc(o.model)}</strong><p>${esc(o.issue)}</p><footer><span>${esc(o.name)}</span><b>${money(o.price)}</b></footer></button>`).join('')||'<p class="board-empty">Prázdné</p>'}</div></section>`).join('');
   $('#empty-orders').classList.toggle('hidden',filtered.length>0);
   $$('.status-select').forEach(s=>s.addEventListener('change',()=>updateStatus(s.dataset.code,s.value)));
   $$('[data-detail]').forEach(b=>b.addEventListener('click',()=>openDetail(b.dataset.detail)));
@@ -75,13 +78,18 @@ function updateStatus(code,status){ const o=orders.find(x=>x.code===code);o.stat
 function openDetail(code){
   const o=orders.find(x=>x.code===code); if(!o)return;
   $('#dialog-code').textContent=`${o.code} · ${o.brand} ${o.model}`;
-  $('#dialog-content').innerHTML=`<div class="dialog-grid"><div class="info-box"><small>Zákazník</small><strong>${esc(o.name)}</strong><br>${esc(o.phone)}<br>${esc(o.email)}</div><div class="info-box"><small>Kolo</small><strong>${esc(o.bikeType)}</strong><br>${esc(o.brand)} ${esc(o.model)}</div><div class="info-box"><small>Požadavek</small><strong>${esc(o.issue)}</strong><br>${esc(o.budget)}</div><div class="info-box"><small>Cena zakázky</small><input id="detail-price" type="number" min="0" step="50" value="${o.price||''}" placeholder="Doplnit cenu v Kč"></div></div><div class="dialog-actions"><button type="button" id="save-detail" class="btn primary">Uložit cenu</button><button type="button" id="delete-order" class="btn secondary">Smazat demo zakázku</button></div>`;
+  $('#dialog-content').innerHTML=`<div class="dialog-grid"><div class="info-box"><small>Zákazník</small><strong>${esc(o.name)}</strong><br>${esc(o.phone)}<br>${esc(o.email)}</div><div class="info-box"><small>Kolo</small><strong>${esc(o.bikeType)}</strong><br>${esc(o.brand)} ${esc(o.model)}</div><div class="info-box"><small>Požadavek</small><strong>${esc(o.issue)}</strong><br>${esc(o.budget)}</div><div class="info-box"><small>Cena zakázky</small><input id="detail-price" type="number" min="0" step="50" value="${o.price||''}" placeholder="Doplnit cenu v Kč"></div></div><label class="service-note">Interní poznámka<textarea id="detail-note" rows="3" placeholder="Diagnostika, čekající díly, domluva se zákazníkem…">${esc(o.note||'')}</textarea></label><div class="dialog-actions"><button type="button" id="save-detail" class="btn primary">Uložit změny</button><button type="button" id="print-detail" class="btn secondary">Tisk karty</button><button type="button" id="delete-order" class="btn secondary danger-text">Smazat</button></div>`;
   $('#order-dialog').showModal();
-  $('#save-detail').onclick=()=>{o.price=Number($('#detail-price').value)||0;saveOrders();$('#order-dialog').close();renderAdmin();toast('Cena byla uložena');};
+  $('#save-detail').onclick=()=>{o.price=Number($('#detail-price').value)||0;o.note=$('#detail-note').value.trim();saveOrders();$('#order-dialog').close();renderAdmin();toast('Zakázka byla uložena');};
+  $('#print-detail').onclick=()=>window.print();
   $('#delete-order').onclick=()=>{if(confirm(`Opravdu smazat ${code}?`)){orders=orders.filter(x=>x.code!==code);saveOrders();$('#order-dialog').close();renderAdmin();}};
 }
 
 $('#admin-search').addEventListener('input',renderAdmin); $('#status-filter').addEventListener('change',renderAdmin);
+let adminView='table';
+function setAdminView(view){adminView=view;$('.orders-table-wrap').classList.toggle('hidden',view!=='table');$('#orders-board').classList.toggle('hidden',view!=='board');$('#table-view').classList.toggle('active',view==='table');$('#board-view').classList.toggle('active',view==='board');}
+$('#table-view').addEventListener('click',()=>setAdminView('table'));$('#board-view').addEventListener('click',()=>setAdminView('board'));
+$('#export-csv').addEventListener('click',()=>{const cols=['Kód','Zákazník','Telefon','E-mail','Typ kola','Značka','Model','Požadavek','Stav','Cena'];const rows=orders.map(o=>[o.code,o.name,o.phone,o.email,o.bikeType,o.brand,o.model,o.issue,o.status,o.price||0]);const quote=v=>`"${String(v??'').replaceAll('"','""')}"`;const csv='\ufeff'+[cols,...rows].map(r=>r.map(quote).join(';')).join('\n');const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([csv],{type:'text/csv'}));a.download=`bikecare-zakazky-${new Date().toISOString().slice(0,10)}.csv`;a.click();URL.revokeObjectURL(a.href);toast('CSV export je připraven');});
 $('#status-filter').innerHTML+=STATUSES.map(s=>`<option>${s}</option>`).join('');
 $('#today-label').textContent=new Intl.DateTimeFormat('cs-CZ',{weekday:'long',day:'numeric',month:'long'}).format(new Date());
 const minDate=new Date().toISOString().slice(0,10); $('[name="preferredDate"]').min=minDate;$('[name="preferredDate"]').value=minDate;
