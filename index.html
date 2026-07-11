@@ -13,6 +13,7 @@
   <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="enhancements.css" />
+  <link rel="stylesheet" href="notifications.css" />
 </head>
 <body>
   <div class="app-shell">
@@ -151,7 +152,9 @@
       <div id="dialog-content"></div>
     </form>
   </dialog>
+  <dialog id="notification-dialog" class="notification-dialog"><div class="dialog-inner"><button class="dialog-close" onclick="this.closest('dialog').close()" aria-label="Zavřít">×</button><p class="eyebrow">E-MAILOVÉ NOTIFIKACE</p><h2 id="notification-order"></h2><div class="notification-layout"><div id="notification-templates" class="notification-templates"></div><div id="notification-preview" class="notification-preview"><p>Vyberte typ zprávy a zobrazí se náhled e-mailu.</p></div></div></div></dialog>
   <div id="toast" class="toast" role="status"></div>
   <script src="app.js"></script>
+  <script src="notifications.js"></script>
 </body>
 </html>
