@@ -23,6 +23,14 @@ Potom otevřete `http://localhost:4173`.
 - hledání a filtrování zakázek,
 - změnu stavu opravy,
 - doplnění ceny v detailu zakázky.
+- prezentační stránku pilotu `pilot.html`,
+- obchodní scénář a plán měření pilotu.
+
+## Veřejné nasazení
+
+Repozitář obsahuje workflow `.github/workflows/pages.yml`. V GitHubu otevřete **Settings → Pages** a jako **Source** nastavte **GitHub Actions**. Po pushi se web publikuje na `https://slanma.github.io/bikecare-demo/`.
+
+Před prezentací nahraďte demonstrační e-mail `pilot@bikecare.cz` v `pilot.html` vlastním kontaktem.
 
 ## Omezení dema
 
